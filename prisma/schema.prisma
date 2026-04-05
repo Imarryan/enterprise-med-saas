@@ -1,0 +1,211 @@
+// Enterprise Medical SaaS - Database Schema
+// Learn more about Prisma: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+// Enums are not supported in SQLite, so we'll use Strings for these fields instead
+// Role: "STUDENT" | "INSTRUCTOR" | "ADMIN"
+// EnrollmentStatus: "ACTIVE" | "COMPLETED" | "SUSPENDED"
+// PaymentStatus: "PENDING" | "SUCCESS" | "FAILED" | "REFUNDED"
+// CourseLevel: "BEGINNER" | "INTERMEDIATE" | "ADVANCED"
+// CourseStatus: "DRAFT" | "PUBLISHED" | "ARCHIVED"
+
+// ─── Models ───────────────────────────────────────────────────────────────────
+
+model User {
+  id            String       @id @default(cuid())
+  name          String?
+  email         String       @unique
+  emailVerified DateTime?
+  image         String?
+  passwordHash  String?
+  role          String       @default("STUDENT")
+  phone         String?      @unique
+  isActive      Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  enrollments   Enrollment[]
+  payments      Payment[]
+  sessions      Session[]
+  accounts      Account[]
+  notes         Note[]
+  certificates  Certificate[]
+  progress      LectureProgress[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Course {
+  id           String       @id @default(cuid())
+  title        String
+  slug         String       @unique
+  description  String
+  thumbnail    String?
+  previewVideo String?
+  price        Float        @default(0)
+  discountPrice Float?
+  currency     String       @default("INR")
+  level        String       @default("BEGINNER")
+  status       String       @default("DRAFT")
+  isFeatured   Boolean      @default(false)
+  duration     Int?         // total minutes
+  language     String       @default("English")
+  category     String?
+  tags         String // SQLite doesn't support String[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  sections    Section[]
+  enrollments Enrollment[]
+  payments    Payment[]
+}
+
+model Section {
+  id        String   @id @default(cuid())
+  title     String
+  position  Int      @default(0)
+  courseId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  course    Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lectures  Lecture[]
+}
+
+model Lecture {
+  id            String   @id @default(cuid())
+  title         String
+  description   String?
+  position      Int      @default(0)
+  duration      Int?     // seconds
+  videoUrl      String?
+  videoProvider String?  // "youtube" | "vimeo" | "bunny" | "mux"
+  isFree        Boolean  @default(false)
+  sectionId     String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  section  Section           @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  progress LectureProgress[]
+  notes    Note[]
+}
+
+model LectureProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  lectureId   String
+  completed   Boolean  @default(false)
+  watchedSecs Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lecture Lecture @relation(fields: [lectureId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lectureId])
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  content   String
+  timestamp Int?     // seconds into video
+  userId    String
+  lectureId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lecture Lecture @relation(fields: [lectureId], references: [id], onDelete: Cascade)
+}
+
+model Enrollment {
+  id        String           @id @default(cuid())
+  userId    String
+  courseId  String
+  status    String           @default("ACTIVE")
+  progress  Float            @default(0) // percentage 0-100
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  userId          String
+  courseId        String
+  amount          Float
+  currency        String        @default("INR")
+  status          String        @default("PENDING")
+  gateway         String        // "razorpay" | "stripe"
+  gatewayOrderId  String?
+  gatewayPaymentId String?
+  gatewaySignature String?
+  metadata        String? // JSON not supported in SQLite natively
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+model Certificate {
+  id          String   @id @default(cuid())
+  userId      String
+  courseId    String
+  issueDate   DateTime @default(now())
+  certificateUrl String?
+  verifyToken String   @unique @default(cuid())
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+}
