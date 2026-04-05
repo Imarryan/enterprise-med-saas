@@ -74,8 +74,8 @@ export async function searchCourses(query: string, category?: string) {
             status: 'PUBLISHED',
             ...(query && {
                 OR: [
-                    { title: { contains: query } },
-                    { description: { contains: query } },
+                    { title: { contains: query, mode: 'insensitive' } },
+                    { description: { contains: query, mode: 'insensitive' } },
                 ],
             }),
             ...(category && { category }),
