@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { BookOpen, Twitter, Linkedin, Youtube, Mail } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { fadeInUp, staggerContainer } from '@/lib/animations';
 
 export default function Footer() {
     const year = new Date().getFullYear();
@@ -26,13 +28,25 @@ export default function Footer() {
         ],
     };
 
+    const socialIcons = [
+        { Icon: Twitter, label: 'Twitter' },
+        { Icon: Linkedin, label: 'LinkedIn' },
+        { Icon: Youtube, label: 'YouTube' },
+    ];
+
     return (
-        <footer style={{
-            background: 'var(--bg-card)',
-            borderTop: '1px solid var(--border)',
-            padding: '64px 0 24px',
-            marginTop: 'auto',
-        }}>
+        <motion.footer
+            style={{
+                background: 'var(--bg-card)',
+                borderTop: '1px solid var(--border)',
+                padding: '64px 0 24px',
+                marginTop: 'auto',
+            }}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true, amount: 0.1 }}
+        >
             <div className="container">
                 <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 48, marginBottom: 48 }}>
                     {/* Brand */}
@@ -50,20 +64,25 @@ export default function Footer() {
                             </span>
                         </Link>
                         <p style={{ color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.7, maxWidth: 280, marginBottom: 20 }}>
-                            Premium digital medical education for healthcare professionals. Learn from India&apos;s top doctors.
+                            Premium digital medical education for healthcare professionals. Learn from India&apos;s top instructors.
                         </p>
                         <div style={{ display: 'flex', gap: 12 }}>
-                            {[Twitter, Linkedin, Youtube].map((Icon, i) => (
-                                <a key={i} href="#" style={{
-                                    width: 36, height: 36, borderRadius: 8,
-                                    background: 'var(--bg-elevated)', border: '1px solid var(--border)',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    color: 'var(--text-secondary)', transition: 'all 0.2s', textDecoration: 'none',
-                                }}
-                                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#7c3aed'; e.currentTarget.style.color = '#9f5cf7'; }}
-                                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}>
+                            {socialIcons.map(({ Icon, label }, i) => (
+                                <motion.a
+                                    key={label}
+                                    href="#"
+                                    aria-label={label}
+                                    style={{
+                                        width: 36, height: 36, borderRadius: 8,
+                                        background: 'var(--bg-elevated)', border: '1px solid var(--border)',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        color: 'var(--text-secondary)', transition: 'all 0.2s', textDecoration: 'none',
+                                    }}
+                                    whileHover={{ scale: 1.15, y: -3, borderColor: '#7c3aed', color: '#9f5cf7' }}
+                                    whileTap={{ scale: 0.9 }}
+                                >
                                     <Icon size={16} />
-                                </a>
+                                </motion.a>
                             ))}
                         </div>
                     </div>
@@ -77,7 +96,7 @@ export default function Footer() {
                             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
                                 {links.map(({ href, label }) => (
                                     <li key={href}>
-                                        <Link href={href} style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 14, transition: 'color 0.2s' }}
+                                        <Link href={href} className="animated-link" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 14, transition: 'color 0.2s' }}
                                             onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
                                             onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}>
                                             {label}
@@ -108,6 +127,6 @@ export default function Footer() {
           footer > div > div:first-child > div:first-child { grid-column: 1 / -1; }
         }
       `}</style>
-        </footer>
+        </motion.footer>
     );
 }

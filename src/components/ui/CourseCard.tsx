@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import { BookOpen, Star, Users, Clock, Play } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface Course {
     id: string | number;
@@ -18,25 +21,45 @@ interface Course {
 export function CourseCard({ course, showCategory = true }: { course: Course; showCategory?: boolean }) {
     return (
         <Link href={`/courses/${course.id}`} className="block h-full no-underline text-inherit rounded-xl group">
-            <div className="card h-full flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(124,58,237,0.15)] hover:border-cyan-500/40 border border-[var(--border)] bg-[var(--bg-elevated)]">
-
+            <motion.div
+                className="card h-full flex flex-col overflow-hidden border border-[var(--border)] bg-[var(--bg-elevated)]"
+                whileHover={{
+                    y: -6,
+                    boxShadow: '0 20px 60px rgba(124,58,237,0.15)',
+                    borderColor: 'rgba(6,182,212,0.4)',
+                }}
+                transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            >
                 {/* Thumbnail */}
-                <div className="relative h-[180px] flex items-center justify-center bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460]">
-                    <BookOpen size={48} className="text-white/15" />
+                <div className="relative h-[180px] flex items-center justify-center bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460] overflow-hidden">
+                    <div style={{ opacity: 0.15 }}>
+                        <BookOpen size={48} className="text-white" />
+                    </div>
 
                     {course.tag && (
-                        <div className={`absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-bold text-white
-                            ${course.tag === 'Bestseller' ? 'bg-amber-500' : course.tag === 'New' ? 'bg-emerald-500' : 'bg-violet-600'}`
-                        }>
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.2, duration: 0.25 }}
+                            className={`absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-bold text-white
+                                ${course.tag === 'Bestseller' ? 'bg-amber-500' : course.tag === 'New' ? 'bg-emerald-500' : 'bg-violet-600'}`}
+                        >
                             {course.tag}
-                        </div>
+                        </motion.div>
                     )}
 
                     {/* Hover Play Overlay */}
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-200 group-hover:bg-black/30">
-                        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white/90 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-150 group-hover:bg-black/30">
+                        <div
+                            className="flex items-center justify-center w-12 h-12 rounded-full bg-white/90 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+                        >
                             <Play size={18} className="text-violet-600 ml-1" />
                         </div>
+                    </div>
+
+                    {/* Shimmer effect on hover */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
                     </div>
                 </div>
 
@@ -70,11 +93,17 @@ export function CourseCard({ course, showCategory = true }: { course: Course; sh
                             <span className="text-[13px] text-[var(--text-muted)] line-through ml-2">₹{course.originalPrice.toLocaleString()}</span>
                         </div>
                         {!showCategory && (
-                            <span className="btn-primary px-4 py-2 text-[13px]">Enroll Now</span>
+                            <motion.span
+                                className="btn-primary px-4 py-2 text-[13px]"
+                                whileHover={{ scale: 1.08 }}
+                                whileTap={{ scale: 0.93 }}
+                            >
+                                Enroll Now
+                            </motion.span>
                         )}
                     </div>
                 </div>
-            </div>
+            </motion.div>
         </Link>
     );
 }

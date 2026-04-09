@@ -5,10 +5,10 @@ import { Calendar, User, Clock, ArrowRight } from 'lucide-react';
 
 const featuredPost = {
     id: 1,
-    title: 'The Future of AI in Medical Diagnostics: What Every Doctor Should Know',
+    title: 'The Future of AI in Medical Diagnostics: What Every Professional Should Know',
     excerpt: 'Artificial intelligence is rapidly transforming how we diagnose and treat complex cases. Learn how to leverage these new tools in your daily clinical practice without losing the human touch.',
     category: 'Technology',
-    author: 'Dr. Sameer Patel',
+    author: 'Sameer Patel',
     date: 'March 14, 2026',
     readTime: '8 min read',
     image: 'linear-gradient(135deg, #0f2027, #203a43, #2c5364)' // Placeholder gradient
@@ -20,7 +20,7 @@ const posts = [
         title: 'Navigating New Guidelines for Hypertension Management',
         excerpt: 'A comprehensive breakdown of the latest AHA/ACC guidelines and how they affect your prescribing patterns.',
         category: 'Clinical Updates',
-        author: 'Dr. Priya Sharma',
+        author: 'Priya Sharma',
         date: 'March 10, 2026',
         readTime: '5 min read',
         image: 'linear-gradient(135deg, #1f4037, #99f2c8)'
@@ -30,7 +30,7 @@ const posts = [
         title: 'Burnout in Healthcare: Strategies for Senior Residents',
         excerpt: 'Recognizing the signs of burnout and practical, evidence-based interventions to maintain mental wellbeing during residency.',
         category: 'Wellness',
-        author: 'Dr. Amit Singh',
+        author: 'Amit Singh',
         date: 'March 5, 2026',
         readTime: '6 min read',
         image: 'linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b)'
@@ -40,7 +40,7 @@ const posts = [
         title: 'Case Study: Atypical Presentation of Pulmonary Embolism',
         excerpt: 'An in-depth look at a recent challenging case from the ER, highlighting the importance of clinical suspicion over classic symptoms.',
         category: 'Case Studies',
-        author: 'Dr. Rahul Gupta',
+        author: 'Rahul Gupta',
         date: 'February 28, 2026',
         readTime: '10 min read',
         image: 'linear-gradient(135deg, #2c3e50, #3498db)'
@@ -50,7 +50,7 @@ const posts = [
         title: 'Telemedicine Best Practices Post-Pandemic',
         excerpt: 'What we&apos;ve learned from years of remote care and how to optimize your digital consultations for better patient outcomes.',
         category: 'Practice Management',
-        author: 'Dr. Sarah Johnson',
+        author: 'Sarah Johnson',
         date: 'February 20, 2026',
         readTime: '7 min read',
         image: 'linear-gradient(135deg, #4b6cb7, #182848)'

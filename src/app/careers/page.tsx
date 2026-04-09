@@ -1,6 +1,6 @@
-import type { Metadata } from 'next';
+'use client';
 
-export const metadata: Metadata = { title: 'Careers' };
+import { WHATSAPP_CHAT_URL } from '@/lib/whatsapp';
 
 const perks = [
   { icon: '🌍', label: 'Remote First' },
@@ -20,6 +20,11 @@ const jobs = [
 ];
 
 export default function CareersPage() {
+  const handleApply = (jobTitle: string) => {
+    const msg = encodeURIComponent(`Hi! I'm interested in the "${jobTitle}" position at MedLearnPro. I'd like to learn more about this opportunity.`);
+    window.open(`https://wa.me/919981891051?text=${msg}`, '_blank');
+  };
+
   return (
     <main style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text-primary)', paddingTop: 96 }}>
       <div className="container" style={{ maxWidth: 896, paddingTop: 48, paddingBottom: 96 }}>
@@ -30,7 +35,7 @@ export default function CareersPage() {
             Join Our Mission
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: 'clamp(1rem, 2vw, 1.15rem)', maxWidth: 580, margin: '0 auto' }}>
-            Help us democratize medical education across India. We&apos;re a passionate team of doctors, engineers, and educators building the future of healthcare learning.
+            Help us democratize medical education across India. We&apos;re a passionate team of instructors, engineers, and educators building the future of healthcare learning.
           </p>
         </div>
 
@@ -62,7 +67,11 @@ export default function CareersPage() {
                   {job.dept} · {job.type} · {job.loc}
                 </p>
               </div>
-              <button className="btn-primary" style={{ padding: '8px 20px', fontSize: 14, flexShrink: 0 }}>
+              <button
+                className="btn-primary"
+                style={{ padding: '8px 20px', fontSize: 14, flexShrink: 0 }}
+                onClick={() => handleApply(job.title)}
+              >
                 Apply Now
               </button>
             </div>
@@ -89,3 +98,4 @@ export default function CareersPage() {
     </main>
   );
 }
+
