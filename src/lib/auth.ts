@@ -1,6 +1,8 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import Google from 'next-auth/providers/google';
+import Twitter from 'next-auth/providers/twitter';
+import Apple from 'next-auth/providers/apple';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { db } from '@/lib/db';
 import { verifyCredentials, loginSchema } from '@/services/authService';
@@ -8,6 +10,7 @@ import { verifyCredentials, loginSchema } from '@/services/authService';
 export const { handlers, auth, signIn, signOut } = NextAuth({
     adapter: PrismaAdapter(db),
     session: { strategy: 'jwt' },
+    trustHost: true,
     pages: {
         signIn: '/auth/login',
         error: '/auth/error',
@@ -17,6 +20,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             clientId: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
         }),
+        ...(process.env.TWITTER_CLIENT_ID ? [Twitter({
+            clientId: process.env.TWITTER_CLIENT_ID!,
+            clientSecret: process.env.TWITTER_CLIENT_SECRET!,
+        })] : []),
+        ...(process.env.APPLE_ID ? [Apple({
+            clientId: process.env.APPLE_ID!,
+            clientSecret: process.env.APPLE_SECRET!,
+        })] : []),
         Credentials({
             name: 'Credentials',
             credentials: {

@@ -11,15 +11,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ─── Enums ────────────────────────────────────────────────────────────────────
-
-// Enums are not supported in SQLite, so we'll use Strings for these fields instead
-// Role: "STUDENT" | "INSTRUCTOR" | "ADMIN"
-// EnrollmentStatus: "ACTIVE" | "COMPLETED" | "SUSPENDED"
-// PaymentStatus: "PENDING" | "SUCCESS" | "FAILED" | "REFUNDED"
-// CourseLevel: "BEGINNER" | "INTERMEDIATE" | "ADVANCED"
-// CourseStatus: "DRAFT" | "PUBLISHED" | "ARCHIVED"
-
 // ─── Models ───────────────────────────────────────────────────────────────────
 
 model User {
@@ -93,6 +84,8 @@ model Course {
   level        String       @default("BEGINNER")
   status       String       @default("DRAFT")
   isFeatured   Boolean      @default(false)
+  comingSoon   Boolean      @default(false)
+  launchDate   DateTime?
   duration     Int?         // total minutes
   language     String       @default("English")
   category     String?
@@ -109,7 +102,7 @@ model Section {
   id        String   @id @default(cuid())
   title     String
   position  Int      @default(0)
-  courseId  String
+  courseId   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -168,6 +161,7 @@ model Enrollment {
   userId    String
   courseId  String
   status    String           @default("ACTIVE")
+  amount    Float            @default(0)
   progress  Float            @default(0) // percentage 0-100
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
@@ -185,7 +179,7 @@ model Payment {
   amount          Float
   currency        String        @default("INR")
   status          String        @default("PENDING")
-  gateway         String        // "razorpay" | "stripe"
+  gateway         String        // "razorpay" | "stripe" | "whatsapp"
   gatewayOrderId  String?
   gatewayPaymentId String?
   gatewaySignature String?

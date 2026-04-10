@@ -1,20 +1,26 @@
 'use client';
 
-import { Search } from 'lucide-react';
+import { Search, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CourseCard } from '@/components/ui/CourseCard';
 import PageTransition from '@/components/PageTransition';
 import AnimatedSection from '@/components/AnimatedSection';
-import { fadeInDown, fadeInUp, staggerContainer, scaleIn } from '@/lib/animations';
+import { fadeInDown, fadeInUp, staggerContainer } from '@/lib/animations';
 
 const allCourses = [
-    { id: 1, title: 'Advanced Cardiology for Practitioners', instructor: 'Priya Sharma', price: 4999, originalPrice: 9999, rating: 4.9, students: 8200, duration: '42 hours', level: 'Advanced', category: 'Cardiology', tag: 'Bestseller' },
-    { id: 2, title: 'Emergency Medicine & Critical Care', instructor: 'Rahul Gupta', price: 3499, originalPrice: 7999, rating: 4.8, students: 5600, duration: '35 hours', level: 'Intermediate', category: 'Emergency', tag: 'New' },
-    { id: 3, title: 'Neurology: From Basics to Advanced', instructor: 'Meera Iyer', price: 5999, originalPrice: 11999, rating: 4.9, students: 3100, duration: '58 hours', level: 'Advanced', category: 'Neurology', tag: 'Top Rated' },
-    { id: 4, title: 'Pediatric Infectious Diseases', instructor: 'Anil Kumar', price: 2999, originalPrice: 5999, rating: 4.7, students: 4200, duration: '24 hours', level: 'Intermediate', category: 'Pediatrics', tag: '' },
-    { id: 5, title: 'Fundamentals of Clinical Radiology', instructor: 'Sarah Johnson', price: 3999, originalPrice: 8999, rating: 4.8, students: 6500, duration: '40 hours', level: 'Beginner', category: 'Radiology', tag: 'Popular' },
-    { id: 6, title: 'Surgical Skills Practicum', instructor: 'Rajesh Singh', price: 7999, originalPrice: 14999, rating: 5.0, students: 1200, duration: '60 hours', level: 'Advanced', category: 'Surgery', tag: 'Premium' }
+    { id: 1, title: 'Advanced Cardiology for Practitioners', instructor: 'Priya Sharma', price: 4999, originalPrice: 9999, rating: 4.9, students: 8200, duration: '42 hours', level: 'Advanced', category: 'Cardiology', tag: 'Bestseller', comingSoon: false },
+    { id: 2, title: 'Emergency Medicine & Critical Care', instructor: 'Rahul Gupta', price: 3499, originalPrice: 7999, rating: 4.8, students: 5600, duration: '35 hours', level: 'Intermediate', category: 'Emergency', tag: 'New', comingSoon: false },
+    { id: 3, title: 'Neurology: From Basics to Advanced', instructor: 'Meera Iyer', price: 5999, originalPrice: 11999, rating: 4.9, students: 3100, duration: '58 hours', level: 'Advanced', category: 'Neurology', tag: 'Top Rated', comingSoon: false },
+    { id: 4, title: 'Pediatric Infectious Diseases', instructor: 'Anil Kumar', price: 2999, originalPrice: 5999, rating: 4.7, students: 4200, duration: '24 hours', level: 'Intermediate', category: 'Pediatrics', tag: '', comingSoon: false },
+    { id: 5, title: 'Fundamentals of Clinical Radiology', instructor: 'Sarah Johnson', price: 3999, originalPrice: 8999, rating: 4.8, students: 6500, duration: '40 hours', level: 'Beginner', category: 'Radiology', tag: 'Popular', comingSoon: false },
+    { id: 6, title: 'Surgical Skills Practicum', instructor: 'Rajesh Singh', price: 7999, originalPrice: 14999, rating: 5.0, students: 1200, duration: '60 hours', level: 'Advanced', category: 'Surgery', tag: 'Premium', comingSoon: false },
+];
+
+const comingSoonCourses = [
+    { id: 'cs-1', title: 'Advanced Robotics AI', instructor: 'Dr. Vikram Patel', price: 6999, originalPrice: 12999, rating: 0, students: 0, duration: '45 hours', level: 'Advanced', category: 'AI & Robotics', tag: '', comingSoon: true, launchDate: 'July 2026' },
+    { id: 'cs-2', title: 'AI in Healthcare', instructor: 'Dr. Ananya Rao', price: 5499, originalPrice: 10999, rating: 0, students: 0, duration: '38 hours', level: 'Intermediate', category: 'AI & Healthcare', tag: '', comingSoon: true, launchDate: 'August 2026' },
+    { id: 'cs-3', title: 'Generative AI Masterclass', instructor: 'Dr. Kiran Desai', price: 8999, originalPrice: 16999, rating: 0, students: 0, duration: '55 hours', level: 'Advanced', category: 'AI', tag: '', comingSoon: true, launchDate: 'September 2026' },
 ];
 
 export default function CoursesPage() {
@@ -138,7 +144,7 @@ export default function CoursesPage() {
                                     initial="hidden"
                                     animate="visible"
                                 >
-                                    {filteredCourses.map((course, i) => (
+                                    {filteredCourses.map((course) => (
                                         <motion.div
                                             key={course.id}
                                             variants={fadeInUp}
@@ -166,6 +172,50 @@ export default function CoursesPage() {
                                 </motion.div>
                             )}
                         </AnimatePresence>
+                    </div>
+                </section>
+
+                {/* Coming Soon Section */}
+                <section className="pt-20">
+                    <div className="container mx-auto px-4">
+                        <AnimatedSection variants={fadeInUp}>
+                            <div style={{ textAlign: 'center', marginBottom: 40 }}>
+                                <motion.div
+                                    style={{
+                                        display: 'inline-flex', alignItems: 'center', gap: 8,
+                                        padding: '8px 20px', borderRadius: 20,
+                                        background: 'linear-gradient(135deg, rgba(124,58,237,0.15), rgba(6,182,212,0.1))',
+                                        border: '1px solid rgba(124,58,237,0.2)',
+                                        marginBottom: 16,
+                                    }}
+                                >
+                                    <Sparkles size={16} color="#9f5cf7" />
+                                    <span style={{ fontSize: 13, fontWeight: 700, color: '#9f5cf7', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                                        Coming Soon
+                                    </span>
+                                </motion.div>
+                                <h2 className="text-3xl md:text-4xl font-extrabold mb-4 text-[#f0f0f8]">
+                                    Be the First to Know
+                                </h2>
+                                <p className="text-[var(--text-secondary)] text-lg max-w-xl mx-auto">
+                                    Exciting new courses are on the way. Get notified when they launch!
+                                </p>
+                            </div>
+                        </AnimatedSection>
+
+                        <motion.div
+                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                            variants={staggerContainer}
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true }}
+                        >
+                            {comingSoonCourses.map((course) => (
+                                <motion.div key={course.id} variants={fadeInUp}>
+                                    <CourseCard course={course} />
+                                </motion.div>
+                            ))}
+                        </motion.div>
                     </div>
                 </section>
             </div>
